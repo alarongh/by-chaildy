@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 560" fill="none">
+  <defs>
+    <linearGradient id="ink" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f0ddff"/><stop offset=".4" stop-color="#a786ff"/><stop offset=".72" stop-color="#e0a4ff"/><stop offset="1" stop-color="#8b69ef"/></linearGradient>
+    <radialGradient id="aura"><stop stop-color="#7835de" stop-opacity=".34"/><stop offset="1" stop-color="#7835de" stop-opacity="0"/></radialGradient>
+    <radialGradient id="card"><stop stop-color="#201037"/><stop offset="1" stop-color="#090711"/></radialGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2"/></filter>
+    <pattern id="engraving" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(25)"><path d="M0 0v7" stroke="#ba8fff" stroke-opacity=".12" stroke-width=".7"/></pattern>
+    <g id="star" stroke="currentColor" stroke-width="1.3"><path d="M0-11 2-2 11 0 2 2 0 11-2 2-11 0-2-2Z"/><path d="m-5-5 10 10M-5 5 5-5" opacity=".55"/></g>
+    <g id="leaf" stroke="currentColor" stroke-width="1.2"><path d="M0 0C-11-15-9-30 0-40 9-29 10-12 0 0Z"/><path d="M0-2v-35M0-12l-5-9M0-20l5-8" opacity=".75"/></g>
+    <g id="corner" stroke="currentColor" stroke-width="1.15"><path d="M0 61V0h61M6 54V6h48M11 44V11h33M0 61C1 36 35 4 61 0M13 33C21 18 31 16 44 13M19 29l-3-9 10 3M30 20l-3-9 10 3"/><path d="M17 17c0 8-8 13-12 15M17 17c8 0 13-8 15-12"/><circle cx="17" cy="17" r="3"/><path d="M0 54l13-6M0 45l18-9M0 36l24-11M9 0l12 22M19 0l9 15M29 0l6 9" opacity=".65"/></g>
+    <g id="flower" stroke="currentColor" stroke-width="1.25"><path d="M0-6c-18-23-22 1-6 6-24 5-11 24 6 7 13 20 27 0 7-6 16-9 2-26-7-7Z"/><circle r="5"/><circle r="2"/><path d="M0-18v10M-16 3l9-2M-2 17l2-9M16 0l-8 1" opacity=".6"/></g>
+  </defs>
+  <ellipse cx="311" cy="270" rx="284" ry="263" fill="url(#aura)"/>
+  <!-- Decorative cards are brand artwork, not tattoo portfolio samples. -->
+  <g transform="rotate(-19 184 284)" color="#aa84f1">
+    <rect x="63" y="72" width="233" height="403" rx="15" fill="#090711" stroke="#7b56be" stroke-width="2"/>
+    <rect x="69" y="78" width="221" height="391" rx="11" stroke="currentColor" stroke-width="1"/>
+    <rect x="76" y="86" width="207" height="374" rx="7" stroke="currentColor" stroke-width="1.5"/>
+    <use href="#corner" transform="translate(82 92) scale(.65)"/><use href="#corner" transform="translate(277 92) rotate(90) scale(.65)"/>
+    <circle cx="179" cy="126" r="18" fill="#0b0714" stroke="currentColor"/><text x="179" y="132" fill="currentColor" text-anchor="middle" font-family="Georgia,serif" font-size="14">XVII</text>
+    <path d="m180 189 14 52 54 10-49 21 9 55-42-36-49 26 22-50-40-39 55 6Z" fill="url(#engraving)" stroke="currentColor" stroke-width="1.4"/>
+    <path d="M110 367c37-64 42-25 70-78 13 49 38 33 64 69M115 373h129M124 383h110" stroke="currentColor"/>
+    <use href="#star" transform="translate(116 187) scale(.55)"/><use href="#star" transform="translate(245 198) scale(.5)"/>
+    <text x="179" y="430" fill="currentColor" text-anchor="middle" font-family="Georgia,serif" font-size="18" letter-spacing="4">ЗВЕЗДА</text>
+  </g>
+  <g transform="rotate(19 415 274)" color="#b28be8">
+    <rect x="300" y="75" width="224" height="404" rx="15" fill="#090711" stroke="#8663c4" stroke-width="2"/>
+    <rect x="306" y="81" width="212" height="392" rx="10" stroke="currentColor"/>
+    <rect x="313" y="89" width="198" height="375" rx="6" stroke="currentColor" stroke-width="1.5"/>
+    <use href="#corner" transform="translate(319 95) scale(.6)"/><use href="#corner" transform="translate(505 95) rotate(90) scale(.6)"/>
+    <circle cx="412" cy="130" r="18" fill="#0b0714" stroke="currentColor"/><text x="412" y="135" fill="currentColor" text-anchor="middle" font-family="Georgia,serif" font-size="14">I</text>
+    <path d="M404 268h17v109h-17ZM398 377h29l-4 8h-21ZM411 385v17M388 405h48" stroke="currentColor" stroke-width="1.6"/>
+    <path d="M412 263c-14-9-5-24 2-33 0 13 16 27-2 33ZM405 272c7 0 1 27 7 27 6 0 2-19 8-23" stroke="currentColor"/>
+    <ellipse cx="412" cy="256" rx="51" ry="71" stroke="currentColor" stroke-dasharray="2 5"/>
+    <use href="#star" transform="translate(452 211) scale(.65)"/><use href="#star" transform="translate(358 317) scale(.5)"/>
+    <text x="412" y="437" fill="currentColor" text-anchor="middle" font-family="Georgia,serif" font-size="17" letter-spacing="3">СИМВОЛ</text>
+  </g>
+  <g transform="rotate(-7 300 278)" color="#dcc0ff">
+    <rect x="173" y="40" width="254" height="452" rx="17" fill="#9d58ff" opacity=".23" filter="url(#glow)"/>
+    <rect x="173" y="40" width="254" height="452" rx="17" fill="url(#card)" stroke="url(#ink)" stroke-width="3"/>
+    <rect x="180" y="47" width="240" height="438" rx="12" stroke="url(#ink)" stroke-width="1.2"/>
+    <rect x="187" y="55" width="226" height="422" rx="7" stroke="url(#ink)" stroke-width="2"/>
+    <rect x="192" y="61" width="216" height="410" rx="4" stroke="currentColor" stroke-width=".6" stroke-dasharray="1 3"/>
+    <use href="#corner" transform="translate(197 66) scale(.8)"/><use href="#corner" transform="translate(403 66) rotate(90) scale(.8)"/>
+    <use href="#corner" transform="translate(403 405) rotate(180) scale(.8)"/><use href="#corner" transform="translate(197 405) rotate(270) scale(.8)"/>
+    <path d="M193 419h214M193 424h214M198 428h204" stroke="url(#ink)" stroke-width="1.5"/>
+    <circle cx="300" cy="88" r="22" fill="#100a1c" stroke="currentColor" stroke-width="1.7"/><circle cx="300" cy="88" r="17" stroke="currentColor" stroke-width=".7"/>
+    <text x="300" y="94" fill="currentColor" text-anchor="middle" font-family="Georgia,serif" font-size="16">XVIII</text>
+    <!-- A crescent, botanical engravings, candlelight and stars. -->
+    <circle cx="301" cy="219" r="66" stroke="#9e76d5" stroke-width=".9" stroke-dasharray="1 4"/>
+    <circle cx="301" cy="219" r="56" stroke="#aa81e2" stroke-width=".7"/>
+    <path d="M319 171a50 50 0 1 0 22 79 44 44 0 0 1-22-79Z" fill="url(#engraving)" stroke="url(#ink)" stroke-width="2"/>
+    <path d="M304 179c-47 13-49 65-14 86M298 188c-34 15-38 49-15 68M286 201c-17 16-20 32-11 47" stroke="currentColor" stroke-width=".7" opacity=".7"/>
+    <path d="M248 173c-25 20-40 56-35 96 4 33 27 55 52 71M351 173c25 20 40 56 35 96-4 33-27 55-52 71" stroke="currentColor" stroke-width="1.2"/>
+    <use href="#leaf" transform="translate(243 181) rotate(-30) scale(.7)"/><use href="#leaf" transform="translate(229 206) rotate(-60) scale(.7)"/><use href="#leaf" transform="translate(219 237) rotate(-85) scale(.7)"/><use href="#leaf" transform="translate(224 271) rotate(-107) scale(.7)"/><use href="#leaf" transform="translate(238 301) rotate(-129) scale(.7)"/>
+    <use href="#leaf" transform="translate(358 181) rotate(30) scale(.7)"/><use href="#leaf" transform="translate(372 206) rotate(60) scale(.7)"/><use href="#leaf" transform="translate(382 237) rotate(85) scale(.7)"/><use href="#leaf" transform="translate(377 271) rotate(107) scale(.7)"/><use href="#leaf" transform="translate(363 301) rotate(129) scale(.7)"/>
+    <g stroke="url(#ink)" stroke-width="1.4"><path d="M288 317h24v57h-24ZM279 374h42l-5 9h-33ZM298 383v15M279 399h43"/><ellipse cx="300" cy="317" rx="12" ry="4"/><path d="M300 311c-14-6-7-17 2-31 0 14 11 26-2 31ZM292 319c6 0 2 21 7 21 5 0 3-12 7-16"/><path d="M297 276v-8M282 282l-6-6M317 282l6-6" stroke-width=".8"/></g>
+    <path d="M210 379c23-20 47-11 71 16M388 379c-23-20-47-11-71 16" stroke="currentColor"/><use href="#flower" transform="translate(230 367) scale(.9)"/><use href="#flower" transform="translate(370 367) scale(.9)"/>
+    <use href="#leaf" transform="translate(267 388) rotate(-65) scale(.5)"/><use href="#leaf" transform="translate(334 388) rotate(65) scale(.5)"/>
+    <use href="#star" transform="translate(300 140) scale(.7)"/><use href="#star" transform="translate(250 271) scale(.42)"/><use href="#star" transform="translate(351 273) scale(.42)"/>
+    <g fill="#dabaff"><circle cx="229" cy="150" r="1.4"/><circle cx="370" cy="151" r="1.4"/><circle cx="258" cy="128" r="1"/><circle cx="342" cy="128" r="1"/><circle cx="254" cy="326" r="1"/><circle cx="347" cy="326" r="1"/></g>
+    <text x="300" y="457" fill="#ebcfff" text-anchor="middle" font-family="Georgia,serif" font-size="22" letter-spacing="7">ЛУНА</text>
+  </g>
+  <g color="#cda6ff"><use href="#star" transform="translate(71 56) scale(.85)"/><use href="#star" transform="translate(516 40) scale(.6)"/><use href="#star" transform="translate(532 500) scale(.85)"/><use href="#star" transform="translate(127 510) scale(.45)"/></g>
+</svg>
