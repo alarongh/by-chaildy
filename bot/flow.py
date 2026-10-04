@@ -29,7 +29,7 @@ class Flow:
         self.store, self.cfg = store, cfg
 
     def begin(self, user):
-        if not self.cfg.can_collect:
+        if not self.cfg.can_collect_for(user):
             return Reply("Запись скоро откроется. Мастер завершает настройку контактов и документов. Пока анкету заполнить нельзя.")
         if self.store.active(user):
             return Reply("У тебя уже есть активная заявка. Посмотреть её: /my. Если нужна новая, сначала отмени текущую.")
@@ -56,7 +56,7 @@ class Flow:
         return Reply(PROMPTS[step], buttons)
 
     def action(self, user, callback, username=None):
-        if not self.cfg.can_collect:
+        if not self.cfg.can_collect_for(user):
             return Reply("Анкеты временно недоступны. Данные можно удалить командой /delete.")
         session = self.store.session(user)
         parts = callback.split(":")
@@ -71,6 +71,7 @@ class Flow:
             data["consent"] = {"version": CONSENT_VERSION, "accepted_at": time.time(), "text": text,
                                "sha256": hashlib.sha256(text.encode()).hexdigest()}
             data["username"] = username
+            data["test"] = self.cfg.test_mode
             step = "age"
         elif step == "age" and action == "adult":
             data["adult"] = True
@@ -103,7 +104,7 @@ class Flow:
         return FIELDS[FIELDS.index(step)+1] if step != "refs" else "review"
 
     def answer(self, user, text=None, photo=None):
-        if not self.cfg.can_collect:
+        if not self.cfg.can_collect_for(user):
             return Reply("Анкеты временно недоступны. Данные можно удалить командой /delete.")
         session = self.store.session(user)
         if not session:

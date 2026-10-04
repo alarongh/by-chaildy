@@ -18,6 +18,7 @@ class Settings:
     db_path: str = "data/chaildy.sqlite3"
     retention_days: int = 90
     privacy_ready: bool = False
+    test_mode: bool = False
 
     @classmethod
     def from_env(cls):
@@ -33,6 +34,7 @@ class Settings:
             db_path=os.getenv("DB_PATH", "data/chaildy.sqlite3"),
             retention_days=int(os.getenv("RETENTION_DAYS", "90")),
             privacy_ready=os.getenv("PRIVACY_READY", "false").lower() == "true",
+            test_mode=os.getenv("TEST_MODE", "false").lower() == "true",
         )
         ZoneInfo(value.timezone)
         if not 1 <= value.retention_days <= 365:
@@ -41,5 +43,10 @@ class Settings:
 
     @property
     def can_collect(self):
-        return bool(self.privacy_ready and self.admins and self.operator.strip()
-                    and self.address.strip() and self.privacy_contact.strip())
+        return bool(not self.test_mode and self.privacy_ready and self.admins and self.operator.strip()
+                    and self.privacy_contact.strip())
+
+    def can_collect_for(self, user):
+        if self.test_mode:
+            return user in self.admins
+        return self.can_collect

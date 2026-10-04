@@ -44,14 +44,26 @@ const path = require('node:path');
       assert.equal(await credit.getAttribute('href'),'https://github.com/alarongh');
       assert.ok(requests.every(request => new URL(request).origin === new URL(url).origin), 'External resource request');
       await page.screenshot({path:path.join(output,`site-${width}.png`),fullPage:true});
-      await page.getByRole('button',{name:'Давай обсудим',exact:true}).click();
+      const botUsername = await page.evaluate(() => window.CHAILDY?.botUsername);
+      let previewOpener;
+      if (botUsername) {
+        await page.evaluate(() => { window.testOpenedUrls = []; window.open = (target) => {window.testOpenedUrls.push(target); return null;}; });
+        await page.getByRole('button',{name:'Давай обсудим',exact:true}).click();
+        assert.deepEqual(await page.evaluate(() => window.testOpenedUrls), [`https://t.me/${botUsername}?start=website`]);
+        assert.equal(await page.locator('dialog').isVisible(), false);
+        previewOpener = '#preview-link';
+        await page.locator(previewOpener).click();
+      } else {
+        previewOpener = '[data-book]';
+        await page.getByRole('button',{name:'Давай обсудим',exact:true}).click();
+      }
       await assert.equal(await page.locator('dialog').isVisible(),true);
       for (let index=0;index<8;index++) await page.locator('#demo-next').click();
       assert.equal(await page.locator('.chat-bubble').count(),15);
       assert.equal(await page.locator('#demo-next').isDisabled(),true);
       await page.keyboard.press('Escape');
       assert.equal(await page.locator('dialog').isVisible(),false);
-      assert.equal(await page.evaluate(() => document.activeElement.textContent.includes('Давай обсудим')),true);
+      assert.equal(await page.evaluate(selector => document.activeElement.matches(selector), previewOpener),true);
       await page.locator('summary').first().click();
       assert.equal(await page.locator('details').first().getAttribute('open'),'');
       await page.getByRole('link',{name:'Персональные данные',exact:true}).click();

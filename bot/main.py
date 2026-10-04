@@ -42,6 +42,8 @@ def keyboard(buttons):
 
 def booking_text(booking, cfg, admin=False):
     text = f"<b>Заявка #{booking['id']}</b>\n{LABELS[booking['status']]}\n"
+    if booking["data"].get("test"):
+        text = "<b>ТЕСТ · реальной записи нет</b>\n\n" + text
     if booking["scheduled"]:
         dt = datetime.fromtimestamp(booking["scheduled"], ZoneInfo(cfg.timezone))
         text += f"\nДата: {dt:%d.%m.%Y, %H:%M} ({escape(cfg.timezone)})\n"
@@ -79,7 +81,9 @@ def build_router(store, cfg):
     async def start(message: Message):
         if message.chat.type != "private":
             return
-        await message.answer("<b>by:Chaildy</b>\n\nДавай начнём с твоей идеи. Здесь можно оставить короткую заявку на тату и получить подтверждение от мастера.\n\n/book - записаться\n/my - статус заявки\n/faq - частые вопросы\n/prepare - перед сеансом\n/contact - связь с мастером\n/privacy - обработка данных\n/delete - удалить данные", reply_markup=keyboard([("Оставить заявку", "book"), ("Моя заявка", "my"), ("Вопросы и ответы", "faq")]))
+        if cfg.test_mode:
+            await message.answer("Бот проходит тестирование. Анкета доступна только тестовым администраторам; вводи вымышленные ответы.")
+        await message.answer("<b>by:Chaildy</b>\n\nДавай начнём с твоей идеи. Оставь короткую заявку, чтобы обсудить тату с мастером. Дата и условия сеанса согласуются отдельно.\n\n/book - оставить заявку\n/my - статус заявки\n/faq - частые вопросы\n/prepare - перед сеансом\n/contact - связь с мастером\n/privacy - обработка данных\n/delete - удалить данные", reply_markup=keyboard([("Оставить заявку", "book"), ("Моя заявка", "my"), ("Вопросы и ответы", "faq")]))
         if admin(message):
             await message.answer(ADMIN_HELP)
 
@@ -94,7 +98,7 @@ def build_router(store, cfg):
     async def privacy(message: Message):
         if message.chat.type == "private":
             text = consent_text(cfg)
-            if not cfg.can_collect:
+            if not cfg.test_mode and not cfg.can_collect:
                 text = "Документ в подготовке. Сбор анкет выключен.\n\n" + text
             await message.answer(escape(text))
 
@@ -328,7 +332,9 @@ async def run():
     task = None
     try:
         me = await bot.get_me()
-        if not cfg.can_collect:
+        if cfg.test_mode:
+            LOG.warning("Test mode enabled: forms restricted to configured administrators")
+        elif not cfg.can_collect:
             LOG.warning("Form collection disabled until operator details, ADMIN_IDS and PRIVACY_READY are configured")
         await bot.set_my_commands([BotCommand(command=c, description=d) for c, d in
                                   [("start", "Главное меню"), ("book", "Заявка на тату"), ("my", "Статус и отмена"),

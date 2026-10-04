@@ -45,8 +45,21 @@ class FlowTests(unittest.TestCase):
         flow = Flow(self.store, Settings())
         self.assertIn("скоро", flow.begin(1).text)
         self.assertIsNone(self.store.session(1))
-        for cfg in (replace(CONFIG, admins=()), replace(CONFIG, operator=""), replace(CONFIG, address=""), replace(CONFIG, privacy_contact="")):
+        for cfg in (replace(CONFIG, admins=()), replace(CONFIG, operator=""), replace(CONFIG, privacy_contact="")):
             self.assertFalse(cfg.can_collect)
+
+    def test_consultation_form_without_address_and_dual_admin_delivery(self):
+        cfg = Settings(admins=(1888165622, 1092851573), operator="by:Chaildy",
+                       privacy_contact="@spider_013", master="spider_013", privacy_ready=True)
+        self.assertTrue(cfg.can_collect_for(1))
+        flow = Flow(self.store, cfg)
+        consent = flow.begin(1).text
+        self.assertIn("консультацию", consent)
+        self.assertIn("@spider_013", consent)
+        self.assertNotIn("[адрес", consent)
+        booking = complete(flow, self.store)
+        self.assertFalse(booking["data"]["test"])
+        self.assertEqual({e['recipient'] for e in self.store.due()}, {1888165622, 1092851573})
 
     def test_consent_required_and_input_not_saved_before_accept(self):
         self.flow.begin(1)
@@ -54,6 +67,25 @@ class FlowTests(unittest.TestCase):
         self.assertEqual(self.store.session(1)["data"], {})
         with self.assertRaises(ValueError):
             self.store.submit(1, CONFIG.admins)
+
+    def test_test_mode_allows_only_admin_and_marks_booking(self):
+        cfg = Settings(admins=(99,), test_mode=True)
+        flow = Flow(self.store, cfg)
+        self.assertFalse(cfg.can_collect)
+        self.assertIn("скоро", flow.begin(1).text)
+        self.assertIsNone(self.store.session(1))
+        self.assertIn("Тест анкеты", flow.begin(99).text)
+        booking = complete(flow, self.store, user=99)
+        self.assertTrue(booking["data"]["test"])
+        self.assertIn("тестовый текст", booking["data"]["consent"]["text"])
+
+    def test_test_mode_blocks_existing_public_drafts(self):
+        complete(self.flow, self.store, user=1, send=False)
+        cfg = replace(CONFIG, test_mode=True)
+        flow = Flow(self.store, cfg)
+        self.assertIn("недоступны", click(flow, self.store, 1, "submit").text)
+        self.assertIn("недоступны", flow.answer(1, "Ответ").text)
+        self.assertIsNone(self.store.active(1))
 
     def test_refused_consent_and_underage_remove_draft(self):
         self.flow.begin(1)
