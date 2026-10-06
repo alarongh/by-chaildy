@@ -11,18 +11,22 @@ import re
 import secrets
 import shutil
 import sqlite3
+import ssl
 import subprocess
 import sys
+import time
 import urllib.error
 import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from dotenv import dotenv_values
+import certifi
 from bot.config import Settings
 
 CLOUD = ROOT / "cloudflare"
 STATE = ROOT / "data" / "cloudflare-runtime.json"
+PLAN_CHECK = ROOT / "data" / "cloudflare-plan-verification.json"
 CLI = CLOUD / "node_modules" / "wrangler" / "bin" / "wrangler.js"
 TABLES = ("sessions", "bookings", "outbox", "sent_messages")
 
@@ -44,9 +48,11 @@ def command(*args, payload=None, account=None):
 def request(url, method="GET", body=None, headers=None):
     payload = json.dumps(body, ensure_ascii=False).encode("utf-8") if body is not None else None
     req = urllib.request.Request(url, data=payload, method=method,
-                                 headers={"Content-Type": "application/json", **(headers or {})})
+                                 headers={"Content-Type": "application/json",
+                                          "User-Agent": "chaildy-deployment/1.0", **(headers or {})})
     try:
-        with urllib.request.urlopen(req, timeout=35) as response:
+        with urllib.request.urlopen(req, timeout=35,
+                                    context=ssl.create_default_context(cafile=certifi.where())) as response:
             return json.loads(response.read())
     except urllib.error.HTTPError as error:
         raise RuntimeError("Remote request failed: HTTP " + str(error.code)) from None
@@ -93,8 +99,20 @@ def free_account():
         selected = accounts[0]["id"]
     if selected not in {a["id"] for a in accounts} or not auth.get("token"):
         raise RuntimeError("Selected account is not available to this authorization.")
-    subscriptions = request("https://api.cloudflare.com/client/v4/accounts/"+selected+"/subscriptions",
-                            headers={"Authorization": "Bearer "+auth["token"]})
+    try:
+        subscriptions = request("https://api.cloudflare.com/client/v4/accounts/"+selected+"/subscriptions",
+                                headers={"Authorization": "Bearer "+auth["token"]})
+    except RuntimeError as error:
+        # Narrow Wrangler OAuth does not include billing. Accept a recent,
+        # account-specific dashboard observation instead of requesting more access.
+        check = json.loads(PLAN_CHECK.read_text(encoding="utf-8")) if PLAN_CHECK.exists() else {}
+        expected_url = "https://dash.cloudflare.com/"+selected+"/workers/plans"
+        age = time.time() - float(check.get("verified_at", 0))
+        if (str(error) == "Remote request failed: HTTP 403" and
+                check.get("account") == selected and check.get("plan") == "free" and
+                check.get("source") == expected_url and 0 <= age <= 3600):
+            return selected
+        raise RuntimeError("Could not verify Workers Free; inspect the current plan in the dashboard.") from None
     if not subscriptions.get("success") or not isinstance(subscriptions.get("result"), list):
         raise RuntimeError("Could not verify Workers Free; deployment stopped.")
     for item in subscriptions["result"]:
