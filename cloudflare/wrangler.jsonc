@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "by-chaildy-bot",
+  "main": "src/worker.mjs",
+  "compatibility_date": "2026-10-04",
+  "workers_dev": true,
+  "preview_urls": false,
+  "durable_objects": { "bindings": [{ "name": "BOOKING", "class_name": "BookingOffice" }] },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["BookingOffice"] }],
+  "observability": { "enabled": false }
+}

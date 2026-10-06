@@ -10,3 +10,6 @@ artifacts/
 node_modules/
 *.sqlite*
 *.log
+cloudflare/.wrangler/
+cloudflare/dist/
+cloudflare/.dev.vars
